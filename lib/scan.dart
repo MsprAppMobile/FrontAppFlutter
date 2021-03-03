@@ -80,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
         leading: IconButton(
-            icon: Icon(Icons.notifications_active),
+            icon: Icon(Icons.arrow_back_rounded),
             onPressed: () {
               runApp(Acceuil());
             }),
