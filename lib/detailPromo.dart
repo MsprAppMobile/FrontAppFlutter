@@ -1,12 +1,14 @@
 import 'package:coupon/home.dart';
+import 'package:coupon/main.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:coupon/scan.dart';
 
 void main() {
-  runApp(Auth());
+  runApp(Detail());
 }
 
-class Auth extends StatelessWidget {
+class Detail extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class Auth extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Authentification'),
+      home: MyHomePage(title: 'Détail de la promotion'),
     );
   }
 }
@@ -52,32 +54,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final pseudoCtrlr = TextEditingController();
-  final passwordCtrlr = TextEditingController();
   int _counter = 0;
-  String _scanBarcode;
 
-  bool isExist(TextEditingController pseudo, TextEditingController password) {
-    //debugPrint(pseudoCtrlr.text);
-    //debugPrint(passwordCtrlr.text);
-
-    if (pseudoCtrlr.text == "toto" && passwordCtrlr.text == "titi") {
-      return true;
-    }
-    return false;
+  void _incrementCounter() {
+    setState(() {
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+      _counter++;
+    });
   }
-
-  /*Future<String> _getTimes() async {
-    // Récupération de la localisation actuelle de l'utilisateur
-    // Construction de l'URL a appeler
-    var url = 'http://10.0.2.2:5000/beers';
-    // Appel
-    var response = await http.get(url);
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
-    debugPrint(response.body);
-    return response.body;
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +80,11 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back_rounded),
+            onPressed: () {
+              runApp(Home());
+            }),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -112,66 +105,10 @@ class _MyHomePageState extends State<MyHomePage> {
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
-                child: Text(' Connexion : ', style: TextStyle(fontSize: 22))),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Login',
-              ),
-              controller: pseudoCtrlr,
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 4, 0, 0),
-            ),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Password',
-              ),
-              controller: passwordCtrlr,
-            ),
-            FlatButton(
-              color: Colors.red,
-              textColor: Colors.white,
-              disabledColor: Colors.grey,
-              disabledTextColor: Colors.black,
-              padding: EdgeInsets.all(9.0),
-              splashColor: Colors.redAccent,
-              onPressed: () {
-                if (isExist(pseudoCtrlr, passwordCtrlr)) {
-                  //_getTimes();
-                  runApp(Home());
-                } else {
-                  return showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        content: Text("Wrong password or login !"),
-                      );
-                    },
-                  );
-                }
-              },
-              child: Text(
-                "Connexion",
-                style: TextStyle(fontSize: 20.0),
-              ),
-            ),
-            /*QrImage(
-              data: "this is qrcode",
-            ),*/
-          ],
+          children: <Widget>[],
         ),
       ),
-      /* floatingActionButton: FloatingActionButton(
-        onPressed: () => {runApp(Home())},
-        tooltip: 'qrcode',
-        child: Icon(Icons.qr_code_scanner_rounded),
-      ),*/ // This trailing comma makes auto-formatting nicer for build methods.
+      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
