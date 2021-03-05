@@ -1,6 +1,5 @@
 import 'package:coupon/home.dart';
 import 'package:flutter/material.dart';
-import 'package:coupon/scan.dart';
 
 void main() {
   runApp(Auth());

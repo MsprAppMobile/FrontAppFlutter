@@ -1,7 +1,7 @@
 import 'package:coupon/detailPromo.dart';
 import 'package:coupon/main.dart';
-import 'package:flutter/material.dart';
 import 'package:coupon/scan.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(Home());
@@ -85,7 +85,10 @@ class _MyHomePageState extends State<MyHomePage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {runApp(Scan())},
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => ScanQR()));
+        },
         tooltip: 'qrcode',
         child: Icon(Icons.qr_code_scanner_rounded),
       ), // This trailing comma makes auto-formatting nicer for build methods.
