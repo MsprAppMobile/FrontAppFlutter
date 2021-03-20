@@ -1,11 +1,13 @@
-import 'package:coupon/home.dart';
+import 'package:coupon/adminDetailPromo.dart';
+import 'package:coupon/main.dart';
+import 'package:coupon/scan.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(Detail());
+  runApp(AdminHome());
 }
 
-class Detail extends StatelessWidget {
+class AdminHome extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class Detail extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Détail de la promotion'),
+      home: MyHomePage(title: 'Liste des promotions !'),
     );
   }
 }
@@ -51,18 +53,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  final items = List<String>.generate(30, (i) => "Promotion n° $i");
 
   @override
   Widget build(BuildContext context) {
@@ -78,34 +69,29 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
         leading: IconButton(
-            icon: Icon(Icons.arrow_back_rounded),
+            icon: Icon(Icons.logout),
             onPressed: () {
-              runApp(Home());
+              runApp(Auth());
             }),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[],
-        ),
+      body: ListView.builder(
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+              title: Text('${items[index]}'),
+              onTap: () {
+                runApp(AdminDetail());
+              });
+        },
       ),
-      // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => ScanQR()));
+        },
+        tooltip: 'qrcode',
+        child: Icon(Icons.qr_code_scanner_rounded),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

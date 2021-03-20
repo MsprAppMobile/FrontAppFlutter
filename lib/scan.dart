@@ -23,7 +23,7 @@ class _ScanQRState extends State<ScanQR> {
           children: [
             //Message displayed over here
             Text(
-              "Result",
+              "",
               style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
@@ -49,7 +49,7 @@ class _ScanQRState extends State<ScanQR> {
                 });
               },
               child: Text(
-                "Ouvrir l'appareil photo",
+                "Scanner",
                 style: TextStyle(color: Colors.indigo[900]),
               ),
               //Button having rounded rectangle border

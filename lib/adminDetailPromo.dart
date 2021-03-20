@@ -1,11 +1,11 @@
-import 'package:coupon/home.dart';
+import 'package:coupon/adminHome.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(Detail());
+  runApp(AdminDetail());
 }
 
-class Detail extends StatelessWidget {
+class AdminDetail extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -80,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
         leading: IconButton(
             icon: Icon(Icons.arrow_back_rounded),
             onPressed: () {
-              runApp(Home());
+              runApp(AdminHome());
             }),
       ),
       body: Center(
