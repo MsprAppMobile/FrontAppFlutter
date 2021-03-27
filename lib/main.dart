@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:coupon/home.dart';
+import 'package:coupon/adminHome.dart';
 import 'package:flutter/material.dart';
 import 'globals.dart' as globals;
 import 'package:http/http.dart' as http;
@@ -33,9 +34,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _formKey = GlobalKey<FormState>();
   final pseudoCtrlr = TextEditingController();
   final passwordCtrlr = TextEditingController();
+  String _value;
 
   String decodeBase64(String str) {
     //'-', '+' 62nd char of encoding,  '_', '/' 63rd char of encoding
@@ -86,13 +87,10 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<String> sunriseSunsetTimes;
-
   @override
   Widget build(BuildContext context) {
     String formGenre = 'Genre';
-    var _value = 1;
-
+    String dropdownValue = 'First';
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -142,9 +140,10 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.all(9.0),
               splashColor: Colors.blueAccent,
               onPressed: () async {
+                //runApp(AdminHome());
                 await _authentification();
                 if (globals.statuscode == 200) {
-                  runApp(Home());
+                  runApp(AdminHome());
                 } else {
                   return showDialog(
                     context: context,
@@ -180,25 +179,25 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Form(
                             child: Column(
                               children: <Widget>[
-                                DropdownButton(
-                                    value: _value,
-                                    items: [
-                                      DropdownMenuItem(
-                                        child: Text("Monsieur"),
-                                        value: 1,
-                                      ),
-                                      DropdownMenuItem(
-                                        child: Text("Madame"),
-                                        value: 2,
-                                      ),
-                                      DropdownMenuItem(
-                                          child: Text("Non binaire"), value: 3),
-                                    ],
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _value = value;
-                                      });
-                                    }),
+                                DropdownButton<String>(
+                                  value: dropdownValue,
+                                  onChanged: (String newValue) async {
+                                    await setState(() {
+                                      dropdownValue = newValue;
+                                    });
+                                  },
+                                  items: <String>[
+                                    'Monsieur',
+                                    'Madame',
+                                    'Non défini',
+                                  ].map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
                                 TextFormField(
                                   decoration: InputDecoration(
                                     labelText: 'Nom',

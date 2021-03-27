@@ -1,5 +1,6 @@
 import 'package:coupon/home.dart';
 import 'package:flutter/material.dart';
+import 'globals.dart' as globals;
 
 void main() {
   runApp(Detail());
@@ -83,27 +84,42 @@ class _MyHomePageState extends State<MyHomePage> {
               runApp(Home());
             }),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[],
-        ),
+      body: Padding(
+        padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+        child: Column(children: <Widget>[
+          TextField(
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Date d\'expiration: ' +
+                    globals.expiration_date.toString().substring(0, 16)),
+          ),
+          TextField(
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Description : ' + globals.description),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+          ),
+          FlatButton(
+            padding: EdgeInsets.all(15),
+            onPressed: () async {},
+            child: Text(
+              "Utiliser la promotion",
+              style: TextStyle(color: Colors.indigo[900]),
+            ),
+            //Button having rounded rectangle border
+            shape: RoundedRectangleBorder(
+              side: BorderSide(color: Colors.indigo[900]),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+          ),
+        ]),
+        /*  TextField(
+        decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: 'Degré d \'alcool : ' + globals.percentageAlcohol),
+      ),*/
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );

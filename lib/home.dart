@@ -2,6 +2,94 @@ import 'package:coupon/detailPromo.dart';
 import 'package:coupon/main.dart';
 import 'package:coupon/scan.dart';
 import 'package:flutter/material.dart';
+import 'globals.dart' as globals;
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+
+class Promo {
+  final int id;
+  final String name;
+  final String expirationDate;
+  final String image;
+  final String description;
+  final String identifiantQr;
+  //final bool isUnique;
+
+  Promo({
+    this.id,
+    this.name,
+    this.expirationDate,
+    this.image,
+    this.description,
+    this.identifiantQr,
+    //this.isUnique,
+  });
+
+  factory Promo.fromJson(Map<String, dynamic> json) {
+    return Promo(
+      id: json['id'] as int,
+      name: json['name'] as String,
+      expirationDate: json['expiration_date'] as String,
+      image: json['image'] as String,
+      description: json['description'] as String,
+      identifiantQr: json['identifiant_QRCode'] as String,
+      //isUnique: json['is_unique'] as bool,
+    );
+  }
+}
+
+Future<List<Promo>> fetchPromos(http.Client client) async {
+  final response = await client.get('http://10.0.2.2:5000/codes',
+      //final response = await client.get('http://172.16.18.16:5000/codes',
+      headers: {"Content-Type": "application/json", "token": globals.token});
+
+  // Use the compute function to run parseBieres in a separate isolate.
+  //print('Response body: ${response.body}');
+
+  return compute(parseBieres, response.body);
+}
+
+List<Promo> parseBieres(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<Promo>((json) => Promo.fromJson(json)).toList();
+}
+
+class PromosList extends StatelessWidget {
+  final List<Promo> promos;
+
+  PromosList({Key key, this.promos}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      /*gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 1,
+      ),*/
+      itemCount: promos.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(promos[index].name),
+          subtitle: Text(promos[index].expirationDate.toString()),
+          trailing: const Icon(Icons.keyboard_arrow_right),
+          dense: false,
+          onTap: () async {
+            globals.promoIndex = promos[index].id;
+            globals.namePromo = promos[index].name;
+            globals.description = promos[index].description;
+
+            globals.idQr = promos[index].identifiantQr;
+            globals.expiration_date = promos[index].expirationDate;
+            print(promos[index].expirationDate.toString());
+
+            runApp(Detail());
+          },
+        );
+      },
+    );
+  }
+}
 
 void main() {
   runApp(Home());
@@ -74,14 +162,14 @@ class _MyHomePageState extends State<MyHomePage> {
               runApp(Auth());
             }),
       ),
-      body: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-              title: Text('${items[index]}'),
-              onTap: () {
-                runApp(Detail());
-              });
+      body: FutureBuilder<List<Promo>>(
+        future: fetchPromos(http.Client()),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) print(snapshot.error);
+
+          return snapshot.hasData
+              ? PromosList(promos: snapshot.data)
+              : Center(child: CircularProgressIndicator());
         },
       ),
       floatingActionButton: FloatingActionButton(

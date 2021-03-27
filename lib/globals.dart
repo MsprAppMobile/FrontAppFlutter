@@ -1,14 +1,14 @@
 library my_prj.globals;
 
-int beerIndex;
-String nameBeer = '';
+int promoIndex;
+String namePromo = '';
 String userName;
 int user_id;
 bool isfav;
 int statuscode = 0;
 String token;
 String category;
-String percentageAlcohol;
+String idQr;
 bool isHere;
 String formGenre;
 String formPrenom;
@@ -16,3 +16,5 @@ String formNom;
 String formEmail;
 String formTel;
 String formVille;
+String expiration_date;
+String description;
