@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:crypto/crypto.dart';
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'globals.dart' as globals;
@@ -13,13 +15,23 @@ class _ScanQRState extends State<ScanQR> {
   String qrCodeResult = "Vous n'avez encore rien scanner";
   String promoCode = '';
 
+  String generateMd5(String input) {
+    return md5.convert(utf8.encode(input)).toString();
+  }
+
+  // ignore: missing_return
   Future<String> _analyseRequete(String code) async {
     if (code.isNotEmpty) {
       int fin = code.indexOf(';');
       promoCode = code.substring(0, fin);
 
-      if (promoCode /*.DecodeMd5() un truc du genre*/ == 'gostyle') {
-        String idPromo = _isExist(code.substring(fin)) as String;
+      if (promoCode == generateMd5('GoStyle')) {
+        _isExist(code.substring(fin + 1));
+        //idPromo = 'ok';
+        if (globals.isExist == 'ok') {
+          _addCodeList();
+        }
+        //si code existant alors ajout a la table codelist
       }
 
       //1er gostyle crypter test jusqu'a ; (encode md5)
@@ -31,14 +43,42 @@ class _ScanQRState extends State<ScanQR> {
     // Récupération de la localisation actuelle de l'utilisateur
     // Construction de l'URL a appeler
     //var url = 'http://10.0.2.2:5000/favorite/' + globals.user_id.toString();
-    var url = 'http://10.0.0.2:5000/code/' + identifiant;
+    var url = 'http://10.0.2.2:5000/code2/' + identifiant;
+    print(identifiant);
     // Appel
     var response = await http.get(url,
         headers: {"Content-Type": "application/json", "token": globals.token});
     //print('Response status: ${response.statusCode}');
     //print('Response body: ${response.body}');
-    globals.isfav = response.body.contains(globals.namePromo);
+    //globals.isfav = response.body.contains(globals.namePromo);
+    if (response.statusCode == 200) {
+      print('is exist ok');
+      globals.isExist = 'ok';
+    }
+    return response.body;
+  }
 
+  Map data = {'code_id': 1, 'user_id': globals.user_id, 'status': 1};
+
+  Future<String> _addCodeList() async {
+    String bodyData = json.encode(data);
+    print('fin');
+    // Récupération de la localisation actuelle de l'utilisateur
+    // Construction de l'URL a appeler
+    //var url = 'http://10.0.2.2:5000/favorite/' + globals.user_id.toString();
+    var url = 'http://10.0.2.2:5000/list';
+    // Appel
+    var response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json", "token": globals.token},
+      body: bodyData,
+    );
+    /*code_id, user_id, status*/
+    //print('Response status: ${response.statusCode}');
+    //print('Response body: ${response.body}');
+    //globals.isfav = response.body.contains(globals.namePromo);
+    print(response.statusCode.toString());
+    print('fin2');
     return response.body;
   }
 
@@ -74,11 +114,12 @@ class _ScanQRState extends State<ScanQR> {
             //Button to scan QR code
             FlatButton(
               padding: EdgeInsets.all(15),
-              onPressed: () async {
-                String codeSanner = await BarcodeScanner.scan();
-                await _analyseRequete(codeSanner); //barcode scnner
+              onPressed: () {
+                //String codeSanner = await BarcodeScanner.scan();
+                _analyseRequete(generateMd5('GoStyle') +
+                    ';identifiantcode'); //barcode scnner
                 setState(() {
-                  qrCodeResult = codeSanner;
+                  qrCodeResult = 'test' /*codeSanner*/;
                 });
               },
               child: Text(

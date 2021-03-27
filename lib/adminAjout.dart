@@ -1,5 +1,6 @@
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:flutter/material.dart';
+import 'globals.dart' as globals;
 
 class AjoutAdmin extends StatefulWidget {
   @override
@@ -8,7 +9,13 @@ class AjoutAdmin extends StatefulWidget {
 
 class _AjoutAdmin extends State<AjoutAdmin> {
   final nameCtrl = TextEditingController();
-  final passwordCtrl = TextEditingController();
+  final mailCtrl = TextEditingController();
+
+  Future<String> _changeRole() async {
+    //requete pour changer le role
+    globals.ajoutadmin = 'User xxx est passé admin';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,18 +40,28 @@ class _AjoutAdmin extends State<AjoutAdmin> {
             TextField(
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Password (user)',
+                labelText: 'Mail (user)',
               ),
-              controller: passwordCtrl,
+              controller: mailCtrl,
             ),
             SizedBox(
               height: 15.0,
             ),
             FlatButton(
               padding: EdgeInsets.all(15),
-              onPressed: () async {},
+              onPressed: () async {
+                _changeRole();
+                return showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      content: Text(globals.ajoutadmin),
+                    );
+                  },
+                );
+              },
               child: Text(
-                "Changer le rôle",
+                "Changer son rôle",
                 style: TextStyle(color: Colors.indigo[900]),
               ),
               //Button having rounded rectangle border

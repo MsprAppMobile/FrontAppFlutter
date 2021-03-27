@@ -61,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<String> _authentification() async {
     Map data = {'pseudo': pseudoCtrlr.text, 'password': passwordCtrlr.text};
     globals.userName = pseudoCtrlr.text;
-    globals.isfav = true;
+    globals.isExist = 'non';
     String body = json.encode(data);
     var url = 'http://10.0.2.2:5001/login';
     //var url = 'http://172.16.18.16:5001/login';
@@ -143,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 //runApp(AdminHome());
                 await _authentification();
                 if (globals.statuscode == 200) {
-                  runApp(AdminHome());
+                  runApp(Home());
                 } else {
                   return showDialog(
                     context: context,

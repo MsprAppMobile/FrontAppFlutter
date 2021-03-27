@@ -115,11 +115,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ]),
-        /*  TextField(
-        decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: 'Degré d \'alcool : ' + globals.percentageAlcohol),
-      ),*/
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
