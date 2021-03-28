@@ -47,11 +47,12 @@ Future<List<Promo>> fetchPromos(http.Client client) async {
 
   // Use the compute function to run parseBieres in a separate isolate.
   //print('Response body: ${response.body}');
+  /*code_id, user_id, status*/
 
-  return compute(parseBieres, response.body);
+  return compute(parsePromos, response.body);
 }
 
-List<Promo> parseBieres(String responseBody) {
+List<Promo> parsePromos(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
   return parsed.map<Promo>((json) => Promo.fromJson(json)).toList();
@@ -80,7 +81,7 @@ class PromosList extends StatelessWidget {
             // globals.promoIndex = promos[index].id;
             globals.namePromo = promos[index].name;
             globals.description = promos[index].description;
-
+            globals.promoid = promos[index].id;
             globals.idQr = promos[index].identifiantQr;
             globals.expiration_date = promos[index].expirationDate;
 

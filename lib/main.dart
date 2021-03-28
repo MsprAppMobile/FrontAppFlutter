@@ -3,6 +3,7 @@ import 'package:coupon/home.dart';
 import 'package:coupon/adminHome.dart';
 import 'package:flutter/material.dart';
 import 'globals.dart' as globals;
+import 'package:dropdownfield/dropdownfield.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -34,9 +35,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String contry_id;
+  List<String> contry = ["Monsieur", "Madame", "Non défini"];
   final pseudoCtrlr = TextEditingController();
   final passwordCtrlr = TextEditingController();
-  String _value;
+  final passwordCtrlr2 = TextEditingController();
+  final nomCtrlr = TextEditingController();
+  final genreCtrlr = TextEditingController();
+  final compAdrCtrlr = TextEditingController();
+  final prenomCtrlr = TextEditingController();
+  final mailCtrlr = TextEditingController();
+  final telCtrlr = TextEditingController();
+  final codePCtrlr = TextEditingController();
+  final villeCtrlr = TextEditingController();
+  final adresseCtrlr = TextEditingController();
 
   String decodeBase64(String str) {
     //'-', '+' 62nd char of encoding,  '_', '/' 63rd char of encoding
@@ -81,9 +93,82 @@ class _MyHomePageState extends State<MyHomePage> {
 
       final payload = decodeBase64(parts[1]);
       final payloadMap = json.decode(payload);
-
+      print(payloadMap['role'].toString());
       globals.user_id = payloadMap['user_id'];
+      globals.role = payloadMap['role'];
       globals.token = response.body;
+    }
+  }
+
+  Future<String> _isExist(String pseudo, String password) async {
+    Map data = {'pseudo': pseudo, 'password': password};
+    String body = json.encode(data);
+    var url = 'http://10.0.2.2:5001/login';
+    //var url = 'http://172.16.18.16:5001/login';
+    http.Response response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: body,
+    );
+    //var test = json.decodeBase64(response.body);
+    globals.statuscode = response.statusCode;
+
+    if (response.statusCode == 200) {
+      globals.isExist = 'Exist';
+    }
+    return "";
+  }
+
+  Future<String> _createUser() async {
+    globals.formAdd = '';
+    globals.isExist = '';
+    if (nomCtrlr.text.isEmpty ||
+        mailCtrlr.text.isEmpty ||
+        passwordCtrlr2.text.isEmpty ||
+        telCtrlr.text.isEmpty ||
+        genreCtrlr.text.isEmpty ||
+        codePCtrlr.text.isEmpty ||
+        codePCtrlr.text.length != 5 ||
+        villeCtrlr.text.isEmpty ||
+        adresseCtrlr.text.isEmpty) {
+      globals.formAdd = '';
+      return "Fin";
+    }
+
+    /*if (codePCtrlr.text.length != 5) {
+      return "";
+    }*/
+    /* _isExist(nomCtrlr.text, passwordCtrlr2.text);
+     if (globals.isExist != 'Exist') {
+      globals.formAdd = 'exist';
+      return 'Fin';
+    }*/
+    Map data = {
+      'pseudo': nomCtrlr.text,
+      'mail': mailCtrlr.text,
+      'password': passwordCtrlr2.text,
+      'telephone': telCtrlr.text,
+      'genre': genreCtrlr.text,
+      'codeP': codePCtrlr.text,
+      'ville': villeCtrlr.text,
+      'adresse': adresseCtrlr.text,
+      'complementAdresse': compAdrCtrlr.text,
+      'role': 'user'
+    };
+
+    var url = 'http://10.0.2.2:5001/users';
+    //var url = 'http://172.16.18.16:5001/login';
+    String body = json.encode(data);
+
+    http.Response response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: body,
+    );
+    //var test = json.decodeBase64(response.body);
+
+    if (response.statusCode == 200) {
+      globals.formAdd = 'ok';
     }
   }
 
@@ -143,7 +228,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 //runApp(AdminHome());
                 await _authentification();
                 if (globals.statuscode == 200) {
-                  runApp(Home());
+                  if (globals.role == "admin") {
+                    runApp(AdminHome());
+                  } else {
+                    runApp(Home());
+                  }
                 } else {
                   return showDialog(
                     context: context,
@@ -179,60 +268,71 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Form(
                             child: Column(
                               children: <Widget>[
-                                DropdownButton<String>(
-                                  value: dropdownValue,
-                                  onChanged: (String newValue) async {
-                                    await setState(() {
-                                      dropdownValue = newValue;
-                                    });
+                                DropDownField(
+                                  onValueChanged: (dynamic value) {
+                                    contry_id = value;
                                   },
-                                  items: <String>[
-                                    'Monsieur',
-                                    'Madame',
-                                    'Non défini',
-                                  ].map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
+                                  value: contry_id,
+                                  //required: true,
+                                  labelText: 'Genre',
+                                  items: contry,
+                                  controller: genreCtrlr,
                                 ),
                                 TextFormField(
                                   decoration: InputDecoration(
-                                    labelText: 'Nom',
+                                    labelText: 'Pseudo',
                                     icon: Icon(Icons.contact_page),
                                   ),
+                                  controller: nomCtrlr,
                                 ),
                                 TextFormField(
                                   decoration: InputDecoration(
-                                    labelText: 'Prénom',
+                                    labelText: 'Password',
                                     icon: Icon(Icons.contact_page),
                                   ),
+                                  controller: passwordCtrlr2,
                                 ),
                                 TextFormField(
                                   decoration: InputDecoration(
                                     labelText: 'Email',
                                     icon: Icon(Icons.email),
                                   ),
+                                  controller: mailCtrlr,
                                 ),
                                 TextFormField(
                                   decoration: InputDecoration(
-                                    labelText: 'Ville, Code Postal',
+                                    labelText: 'Code Postal',
                                     icon: Icon(Icons.add_location_alt_sharp),
                                   ),
+                                  controller: codePCtrlr,
+                                ),
+                                TextFormField(
+                                  decoration: InputDecoration(
+                                    labelText: 'Ville',
+                                    icon: Icon(Icons.add_location_alt_sharp),
+                                  ),
+                                  controller: villeCtrlr,
                                 ),
                                 TextFormField(
                                   decoration: InputDecoration(
                                     labelText: 'Adresse',
                                     icon: Icon(Icons.add_location_alt_sharp),
                                   ),
+                                  controller: adresseCtrlr,
+                                ),
+                                TextFormField(
+                                  decoration: InputDecoration(
+                                    labelText: 'Complément Adresse',
+                                    icon: Icon(Icons.add_location_alt_sharp),
+                                  ),
+                                  controller: compAdrCtrlr,
                                 ),
                                 TextFormField(
                                   decoration: InputDecoration(
                                     labelText: 'Téléphone',
                                     icon: Icon(Icons.add_call),
                                   ),
+                                  controller: telCtrlr,
                                 ),
                               ],
                             ),
@@ -241,7 +341,39 @@ class _MyHomePageState extends State<MyHomePage> {
                         actions: [
                           RaisedButton(
                               child: Text("Submit"),
-                              onPressed: () {
+                              onPressed: () async {
+                                await _createUser();
+                                if (globals.formAdd == 'ok') {
+                                  return showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        content: Text(
+                                            "Votre compte à bien été créer !"),
+                                      );
+                                    },
+                                  );
+                                } else if (globals.formAdd == 'exist') {
+                                  return showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        content: Text(
+                                            "Erreur: Ce pseudo est déjà pris par un autre utilisateur"),
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  return showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        content: Text(
+                                            "Erreur: vérifié que les informations saisi sont valident."),
+                                      );
+                                    },
+                                  );
+                                }
                                 // your code
                               })
                         ],

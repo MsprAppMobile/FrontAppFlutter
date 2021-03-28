@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:flutter/material.dart';

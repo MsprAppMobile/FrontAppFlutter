@@ -1,6 +1,7 @@
 import 'package:coupon/home.dart';
 import 'package:flutter/material.dart';
 import 'globals.dart' as globals;
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(Detail());
@@ -65,6 +66,16 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _launchLink() async {
+    const url = "https://google.com";
+
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw "Impossible de lancer le lien.";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -103,7 +114,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           FlatButton(
             padding: EdgeInsets.all(15),
-            onPressed: () async {},
+            onPressed: () async {
+              _launchLink();
+            },
             child: Text(
               "Utiliser la promotion",
               style: TextStyle(color: Colors.indigo[900]),
