@@ -113,9 +113,9 @@ class _ScanQRState extends State<ScanQR> {
             //Button to scan QR code
             FlatButton(
               padding: EdgeInsets.all(15),
-              onPressed: () {
+              onPressed: () async {
                 //String codeSanner = await BarcodeScanner.scan();
-                _analyseRequete(generateMd5('GoStyle') +
+                await _analyseRequete(generateMd5('GoStyle') +
                     ';identifiantcode'); //barcode scnner
                 setState(() {
                   qrCodeResult = 'test' /*codeSanner*/;

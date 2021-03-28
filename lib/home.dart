@@ -40,13 +40,14 @@ class Promo {
 }
 
 Future<List<Promo>> fetchPromos(http.Client client) async {
-  final response = await client.get('http://10.0.2.2:5000/codes',
+  final response = await client.get(
+      'http://10.0.2.2:5000/list/' + globals.user_id.toString(),
       //final response = await client.get('http://172.16.18.16:5000/codes',
       headers: {"Content-Type": "application/json", "token": globals.token});
 
   // Use the compute function to run parseBieres in a separate isolate.
   //print('Response body: ${response.body}');
-
+  print(response.statusCode);
   return compute(parseBieres, response.body);
 }
 
