@@ -322,7 +322,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                                 TextFormField(
                                   decoration: InputDecoration(
-                                    labelText: 'Complément Adresse',
+                                    labelText: 'Complément Adresse (optionel)',
                                     icon: Icon(Icons.add_location_alt_sharp),
                                   ),
                                   controller: compAdrCtrlr,

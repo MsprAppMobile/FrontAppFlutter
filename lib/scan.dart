@@ -23,35 +23,30 @@ class _ScanQRState extends State<ScanQR> {
     if (code.isNotEmpty) {
       int fin = code.indexOf(';');
       promoCode = code.substring(0, fin);
+      print('1-pormoCode : ' + promoCode);
+      print("2- promo = gostyle md5" + generateMd5('GoStyle'));
 
       if (promoCode == generateMd5('GoStyle')) {
-        _isExist(code.substring(fin + 1));
+        print('3-Avant isExist');
+        await _isExist(code.substring(fin + 1));
         //idPromo = 'ok';
         if (globals.isExist == 'ok') {
           _addCodeList();
         }
-        //si code existant alors ajout a la table codelist
       }
-
-      //1er gostyle crypter test jusqu'a ; (encode md5)
-      //si bon 2eme partie identifiant qr ; test si identifiantexist
     }
   }
 
   Future<String> _isExist(identifiant) async {
-    // Récupération de la localisation actuelle de l'utilisateur
-    // Construction de l'URL a appeler
-    //var url = 'http://10.0.2.2:5000/favorite/' + globals.user_id.toString();
+    print('4-dans isexist');
+
     var url = 'http://10.0.2.2:5000/code2/' + identifiant;
     print(identifiant);
-    // Appel
     var response = await http.get(url,
         headers: {"Content-Type": "application/json", "token": globals.token});
-    //print('Response status: ${response.statusCode}');
-    //print('Response body: ${response.body}');
-    //globals.isfav = response.body.contains(globals.namePromo);
+
     if (response.statusCode == 200) {
-      print('is exist ok');
+      print('5-response' + response.statusCode.toString());
       globals.isExist = 'ok';
     }
     return response.body;
@@ -61,7 +56,7 @@ class _ScanQRState extends State<ScanQR> {
 
   Future<String> _addCodeList() async {
     String bodyData = json.encode(data);
-    print('fin');
+    print('6-addCode dedans');
     // Récupération de la localisation actuelle de l'utilisateur
     // Construction de l'URL a appeler
     //var url = 'http://10.0.2.2:5000/favorite/' + globals.user_id.toString();
@@ -76,8 +71,8 @@ class _ScanQRState extends State<ScanQR> {
     //print('Response status: ${response.statusCode}');
     //print('Response body: ${response.body}');
     //globals.isfav = response.body.contains(globals.namePromo);
-    print(response.statusCode.toString());
-    print('fin2');
+    print('7-ajout code status' + response.statusCode.toString());
+
     return response.body;
   }
 
@@ -114,11 +109,10 @@ class _ScanQRState extends State<ScanQR> {
             FlatButton(
               padding: EdgeInsets.all(15),
               onPressed: () async {
-                //String codeSanner = await BarcodeScanner.scan();
-                await _analyseRequete(generateMd5('GoStyle') +
-                    ';identifiantcode'); //barcode scnner
+                String codeSanner = await BarcodeScanner.scan();
+                await _analyseRequete(codeSanner); //barcode scnner
                 setState(() {
-                  qrCodeResult = 'test' /*codeSanner*/;
+                  qrCodeResult = codeSanner /*codeSanner*/;
                 });
               },
               child: Text(
