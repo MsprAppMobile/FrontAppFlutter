@@ -1,5 +1,6 @@
 library my_prj.globals;
 
+//librairie de variable globals pour le projet.
 int promoIndex;
 String namePromo = '';
 String userName;
@@ -17,8 +18,6 @@ String formAdd;
 String user_idmod;
 String rolemod;
 String formNom;
-String formEmail;
-String formTel;
-String formVille;
+int isunique;
 String expiration_date;
 String description;

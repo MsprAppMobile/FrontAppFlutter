@@ -15,13 +15,18 @@ class _AjoutAdmin extends State<AjoutAdmin> {
   final mailCtrl = TextEditingController();
 
   Future<String> _changeRole() async {
+    //Methode permettant de changer le role d'un user en admin ou admin en user.
     globals.ajoutadmin = '';
     globals.rolemod = '';
     Map data = {'role': 'admin'};
 
     await _getRole(nameCtrl.text);
-
+    //appel _getRole() pour recupérer le role de l'utilisateur saisi par le pseudo
+    if (globals.rolemod == '') {
+      return 'FIN';
+    }
     if (globals.rolemod == 'admin') {
+      //test pour savoir quelle valeur donner à role en fonciton de son role acutel
       globals.ajoutadmin = 'User ' + nameCtrl.text + ' est passé user';
       data = {'role': 'user'};
     } else {
@@ -36,23 +41,25 @@ class _AjoutAdmin extends State<AjoutAdmin> {
       headers: {"Content-Type": "application/json", "token": globals.token},
       body: bodyData,
     );
-    //print(response.statusCode.toString());
+    return response.body;
   }
 
   Future<String> _getRole(String pseudo) async {
+    // Récupère en fonction du pseudo l'id et le role d'un user.
     globals.ajoutadmin = '';
     var url = 'http://10.0.2.2:5001/user/' + pseudo;
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json", "token": globals.token},
     );
-    //print('Response body: ${response.body}');
-    final Map parsed = json.decode(response.body);
-    print(parsed['id']);
-    print(parsed['role']);
-    globals.user_idmod = parsed['id'].toString();
-    globals.rolemod = parsed['role'].toString();
+    if (response.statusCode == 200) {
+      final Map parsed = json.decode(response.body);
 
+      globals.user_idmod = parsed['id'].toString();
+      globals.rolemod = parsed['role'].toString();
+    } else {
+      globals.ajoutadmin = 'Pseudo inconnu!';
+    }
     return '';
   }
 
@@ -74,16 +81,6 @@ class _AjoutAdmin extends State<AjoutAdmin> {
               ),
               controller: nameCtrl,
             ),
-            /*  Padding(
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-            ),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Mail (user)',
-              ),
-              controller: mailCtrl,
-            ),*/
             SizedBox(
               height: 15.0,
             ),
@@ -91,7 +88,6 @@ class _AjoutAdmin extends State<AjoutAdmin> {
               padding: EdgeInsets.all(15),
               onPressed: () async {
                 await _changeRole();
-                // await _getRole(nameCtrl.text);
 
                 return showDialog(
                   context: context,
@@ -106,7 +102,6 @@ class _AjoutAdmin extends State<AjoutAdmin> {
                 "Changer son rôle",
                 style: TextStyle(color: Colors.indigo[900]),
               ),
-              //Button having rounded rectangle border
               shape: RoundedRectangleBorder(
                 side: BorderSide(color: Colors.indigo[900]),
                 borderRadius: BorderRadius.circular(20.0),

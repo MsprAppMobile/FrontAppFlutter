@@ -11,7 +11,6 @@ void main() {
 }
 
 class Auth extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -35,7 +34,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String contry_id;
+  String genre_id;
   List<String> contry = ["Monsieur", "Madame", "Non défini"];
   final pseudoCtrlr = TextEditingController();
   final passwordCtrlr = TextEditingController();
@@ -93,14 +92,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
       final payload = decodeBase64(parts[1]);
       final payloadMap = json.decode(payload);
-      print(payloadMap['role'].toString());
       globals.user_id = payloadMap['user_id'];
       globals.role = payloadMap['role'];
       globals.token = response.body;
     }
+    return response.statusCode.toString();
   }
 
-  Future<String> _isExist(String pseudo, String password) async {
+  /*Future<String> _isExist(String pseudo, String password) async {
     Map data = {'pseudo': pseudo, 'password': password};
     String body = json.encode(data);
     var url = 'http://10.0.2.2:5001/login';
@@ -117,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
       globals.isExist = 'Exist';
     }
     return "";
-  }
+  }*/
 
   Future<String> _createUser() async {
     globals.formAdd = '';
@@ -170,27 +169,16 @@ class _MyHomePageState extends State<MyHomePage> {
     if (response.statusCode == 200) {
       globals.formAdd = 'ok';
     }
+    return response.body;
   }
 
   @override
   Widget build(BuildContext context) {
-    String formGenre = 'Genre';
-    String dropdownValue = 'First';
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
           children: <Widget>[
             Padding(
@@ -270,9 +258,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               children: <Widget>[
                                 DropDownField(
                                   onValueChanged: (dynamic value) {
-                                    contry_id = value;
+                                    genre_id = value;
                                   },
-                                  value: contry_id,
+                                  value: genre_id,
                                   //required: true,
                                   labelText: 'Genre',
                                   items: contry,
@@ -374,7 +362,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                     },
                                   );
                                 }
-                                // your code
                               })
                         ],
                       );

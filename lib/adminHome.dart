@@ -66,9 +66,6 @@ class PromosList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      /*gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 1,
-      ),*/
       itemCount: promos.length,
       itemBuilder: (context, index) {
         return ListTile(
@@ -78,12 +75,12 @@ class PromosList extends StatelessWidget {
           trailing: const Icon(Icons.keyboard_arrow_right),
           dense: false,
           onTap: () async {
-            // globals.promoIndex = promos[index].id;
             globals.namePromo = promos[index].name;
             globals.description = promos[index].description;
             globals.promoid = promos[index].id;
             globals.idQr = promos[index].identifiantQr;
             globals.expiration_date = promos[index].expirationDate;
+            globals.isunique = promos[index].isUnique;
 
             runApp(AdminDetail());
           },

@@ -65,9 +65,6 @@ class PromosList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      /*gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 1,
-      ),*/
       itemCount: promos.length,
       itemBuilder: (context, index) {
         return ListTile(

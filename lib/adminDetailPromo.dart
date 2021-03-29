@@ -2,20 +2,26 @@ import 'package:coupon/adminHome.dart';
 import 'package:flutter/material.dart';
 import 'globals.dart' as globals;
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 void main() {
   runApp(AdminDetail());
 }
 
 Future<String> _supPromos() async {
-  //var url = 'http://10.0.2.2:5000/favorite/' +
   var url = 'http://10.0.2.2:5000/code/' + globals.promoid.toString();
 
   http.Response response = await http.delete(
     url,
     headers: {"Content-Type": "application/json", "token": globals.token},
   );
+  return response.body;
+}
+
+String _promounique() {
+  if (globals.isunique == 1) {
+    return 'Non';
+  } else
+    return 'Oui';
 }
 
 class AdminDetail extends StatelessWidget {
@@ -96,6 +102,16 @@ class _MyHomePageState extends State<MyHomePage> {
             decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Description : ' + globals.description),
+          ),
+          TextField(
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Id promo : ' + globals.idQr),
+          ),
+          TextField(
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Promo renouvelable: ' + _promounique()),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
