@@ -22,12 +22,9 @@ class _ScanQRState extends State<ScanQR> {
     if (code.isNotEmpty) {
       int fin = code.indexOf(';');
       promoCode = code.substring(0, fin);
-      print('1-pormoCode : ' + promoCode);
-      print("2- promo = gostyle md5" + generateMd5('GoStyle'));
 
       if (promoCode == generateMd5('GoStyle')) {
-        print('3-Avant isExist');
-        await _isExist(code.substring(fin + 1));
+        await _isExist(code);
         //idPromo = 'ok';
         if (globals.isExist == 'ok') {
           _addCodeList();
@@ -38,27 +35,28 @@ class _ScanQRState extends State<ScanQR> {
   }
 
   Future<String> _isExist(identifiant) async {
-    print('4-dans isexist');
-
     //  var url = 'http://10.0.2.2:5000/code/' + identifiant;
-    var url = 'http://172.16.18.27:5000/code/' + identifiant;
+    var url = 'http://172.16.18.27:5000/codeqr/' + identifiant.toString();
 
-    print(identifiant);
     var response = await http.get(url,
         headers: {"Content-Type": "application/json", "token": globals.token});
+    int virgule = response.body.indexOf(',');
 
     if (response.statusCode == 200) {
-      print('5-response' + response.statusCode.toString());
+      globals.codeid = response.body.substring(1, virgule);
       globals.isExist = 'ok';
     }
     return response.body;
   }
 
-  Map data = {'code_id': 1, 'user_id': globals.user_id, 'status': 1};
-
   Future<String> _addCodeList() async {
+    Map data = {
+      'code_id': globals.codeid.toString(),
+      'user_id': globals.user_id.toString(),
+      'status': '0'
+    };
+
     String bodyData = json.encode(data);
-    print('6-addCode dedans');
 
     //  var url = 'http://10.0.2.2:5000/list';
     var url = 'http://172.16.18.27:5000/list';
@@ -68,8 +66,6 @@ class _ScanQRState extends State<ScanQR> {
       headers: {"Content-Type": "application/json", "token": globals.token},
       body: bodyData,
     );
-
-    print('7-ajout code status' + response.statusCode.toString());
 
     return response.body;
   }
@@ -109,7 +105,7 @@ class _ScanQRState extends State<ScanQR> {
                 String codeSanner = await BarcodeScanner.scan();
                 await _analyseRequete(codeSanner); //barcode scnner
                 setState(() {
-                  qrCodeResult = codeSanner;
+                  qrCodeResult = 'Promotion ajouté !';
                 });
               },
               child: Text(

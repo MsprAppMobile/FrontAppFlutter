@@ -48,10 +48,10 @@ Future<List<Promo>> fetchPromos(http.Client client) async {
   // Use the compute function to run parseBieres in a separate isolate.
   //print('Response body: ${response.body}');
   print(response.statusCode);
-  return compute(parseBieres, response.body);
+  return compute(parsePromos, response.body);
 }
 
-List<Promo> parseBieres(String responseBody) {
+List<Promo> parsePromos(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
   return parsed.map<Promo>((json) => Promo.fromJson(json)).toList();
@@ -174,6 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: () {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => ScanQR()));
+          runApp(Home());
         },
         tooltip: 'qrcode',
         child: Icon(Icons.qr_code_scanner_rounded),

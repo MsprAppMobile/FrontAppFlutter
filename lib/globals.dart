@@ -21,3 +21,4 @@ String formNom;
 int isunique;
 String expiration_date;
 String description;
+String codeid;
