@@ -1,6 +1,6 @@
 import 'package:coupon/detailPromo.dart';
 import 'package:coupon/main.dart';
-import 'package:coupon/scan.dart';
+import 'package:coupon/scanner.dart';
 import 'package:flutter/material.dart';
 import 'globals.dart' as globals;
 import 'dart:convert';
@@ -46,8 +46,6 @@ Future<List<Promo>> fetchPromos(http.Client client) async {
       headers: {"Content-Type": "application/json", "token": globals.token});
 
   // Use the compute function to run parseBieres in a separate isolate.
-  //print('Response body: ${response.body}');
-  print(response.statusCode);
   return compute(parsePromos, response.body);
 }
 
@@ -79,7 +77,6 @@ class PromosList extends StatelessWidget {
 
             globals.idQr = promos[index].identifiantQr;
             globals.expiration_date = promos[index].expirationDate;
-            print(promos[index].expirationDate.toString());
 
             runApp(Detail());
           },
@@ -172,9 +169,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
+          /*Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => ScanQR()));
-          runApp(Home());
+          runApp(Home());*/
+          runApp(Scan());
         },
         tooltip: 'qrcode',
         child: Icon(Icons.qr_code_scanner_rounded),
