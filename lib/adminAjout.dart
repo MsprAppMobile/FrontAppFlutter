@@ -35,7 +35,8 @@ class _AjoutAdmin extends State<AjoutAdmin> {
     }
 
     String bodyData = json.encode(data);
-    var url = 'http://10.0.2.2:5001/user/' + globals.user_idmod.toString();
+    // var url = 'http://10.0.2.2:5001/user/' + globals.user_idmod.toString();
+    var url = 'http://172.16.18.27:5001/user/' + globals.user_idmod.toString();
     var response = await http.put(
       url,
       headers: {"Content-Type": "application/json", "token": globals.token},
@@ -47,7 +48,8 @@ class _AjoutAdmin extends State<AjoutAdmin> {
   Future<String> _getRole(String pseudo) async {
     // Récupère en fonction du pseudo l'id et le role d'un user.
     globals.ajoutadmin = '';
-    var url = 'http://10.0.2.2:5001/user/' + pseudo;
+    //  var url = 'http://10.0.2.2:5001/user/' + pseudo;
+    var url = 'http://172.16.18.27:5001/user/' + pseudo;
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json", "token": globals.token},

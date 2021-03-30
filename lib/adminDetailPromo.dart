@@ -8,7 +8,8 @@ void main() {
 }
 
 Future<String> _supPromos() async {
-  var url = 'http://10.0.2.2:5000/code/' + globals.promoid.toString();
+  // var url = 'http://10.0.2.2:5000/code/' + globals.promoid.toString();
+  var url = 'http://172.16.18.27:5000/code/' + globals.promoid.toString();
 
   http.Response response = await http.delete(
     url,
@@ -120,14 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: EdgeInsets.all(15),
             onPressed: () async {
               await _supPromos();
-              return showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    content: Text("Promotion supprimé"),
-                  );
-                },
-              );
+              runApp(AdminHome());
             },
             child: Text(
               "Supprimer la promotion",
@@ -140,11 +134,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ]),
-        /*  TextField(
-        decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: 'Degré d \'alcool : ' + globals.percentageAlcohol),
-      ),*/
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );

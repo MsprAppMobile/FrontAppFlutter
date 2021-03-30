@@ -74,8 +74,8 @@ class _MyHomePageState extends State<MyHomePage> {
     globals.userName = pseudoCtrlr.text;
     globals.isExist = 'non';
     String body = json.encode(data);
-    var url = 'http://10.0.2.2:5001/login';
-    //var url = 'http://172.16.18.16:5001/login';
+    //var url = 'http://10.0.2.2:5001/login';
+    var url = 'http://172.16.18.27:5001/login';
     http.Response response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
@@ -99,25 +99,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return response.statusCode.toString();
   }
 
-  /*Future<String> _isExist(String pseudo, String password) async {
-    Map data = {'pseudo': pseudo, 'password': password};
-    String body = json.encode(data);
-    var url = 'http://10.0.2.2:5001/login';
-    //var url = 'http://172.16.18.16:5001/login';
-    http.Response response = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: body,
-    );
-    //var test = json.decodeBase64(response.body);
-    globals.statuscode = response.statusCode;
-
-    if (response.statusCode == 200) {
-      globals.isExist = 'Exist';
-    }
-    return "";
-  }*/
-
   Future<String> _createUser() async {
     globals.formAdd = '';
     globals.isExist = '';
@@ -134,14 +115,6 @@ class _MyHomePageState extends State<MyHomePage> {
       return "Fin";
     }
 
-    /*if (codePCtrlr.text.length != 5) {
-      return "";
-    }*/
-    /* _isExist(nomCtrlr.text, passwordCtrlr2.text);
-     if (globals.isExist != 'Exist') {
-      globals.formAdd = 'exist';
-      return 'Fin';
-    }*/
     Map data = {
       'pseudo': nomCtrlr.text,
       'mail': mailCtrlr.text,
@@ -155,8 +128,8 @@ class _MyHomePageState extends State<MyHomePage> {
       'role': 'user'
     };
 
-    var url = 'http://10.0.2.2:5001/users';
-    //var url = 'http://172.16.18.16:5001/login';
+    //var url = 'http://10.0.2.2:5001/users';
+    var url = 'http://172.16.18.27:5001/login';
     String body = json.encode(data);
 
     http.Response response = await http.post(

@@ -40,7 +40,9 @@ class _ScanQRState extends State<ScanQR> {
   Future<String> _isExist(identifiant) async {
     print('4-dans isexist');
 
-    var url = 'http://10.0.2.2:5000/code/' + identifiant;
+    //  var url = 'http://10.0.2.2:5000/code/' + identifiant;
+    var url = 'http://172.16.18.27:5000/code/' + identifiant;
+
     print(identifiant);
     var response = await http.get(url,
         headers: {"Content-Type": "application/json", "token": globals.token});
@@ -58,8 +60,9 @@ class _ScanQRState extends State<ScanQR> {
     String bodyData = json.encode(data);
     print('6-addCode dedans');
 
-    var url = 'http://10.0.2.2:5000/list';
-    // Appel
+    //  var url = 'http://10.0.2.2:5000/list';
+    var url = 'http://172.16.18.27:5000/list';
+// Appel
     var response = await http.post(
       url,
       headers: {"Content-Type": "application/json", "token": globals.token},
