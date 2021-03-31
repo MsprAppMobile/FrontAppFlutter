@@ -62,12 +62,15 @@ class PromosList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    globals.isExist = 'rien';
+
     return ListView.builder(
       itemCount: promos.length,
       itemBuilder: (context, index) {
         return ListTile(
           title: Text(promos[index].name),
-          subtitle: Text(promos[index].expirationDate.toString()),
+          subtitle: Text('Expire le : ' +
+              promos[index].expirationDate.toString().substring(0, 16)),
           trailing: const Icon(Icons.keyboard_arrow_right),
           dense: false,
           onTap: () async {

@@ -23,12 +23,9 @@ Future<String> _analyseRequete(String code) async {
   if (code.isNotEmpty) {
     int fin = code.indexOf(';');
     promoCode = code.substring(0, fin);
-    print('1-pormoCode : ' + promoCode);
-    print("2- promo = gostyle md5" + generateMd5('GoStyle'));
 
     if (promoCode == generateMd5('GoStyle')) {
-      print('3-Avant isExist');
-      await _isExist(code.substring(fin + 1));
+      await _isExist(code);
       //idPromo = 'ok';
       if (globals.isExist == 'ok') {
         _addCodeList();
@@ -39,27 +36,27 @@ Future<String> _analyseRequete(String code) async {
 }
 
 Future<String> _isExist(identifiant) async {
-  print('4-dans isexist');
+  //  var url = 'http://10.0.2.2:5000/codeqr/' + identifiant;
+  var url = 'http://172.16.18.27:5000/codeqr/' + identifiant.toString();
 
-  //  var url = 'http://10.0.2.2:5000/code/' + identifiant;
-  var url = 'http://172.16.18.27:5000/code/' + identifiant.toString();
-
-  print(identifiant);
   var response = await http.get(url,
       headers: {"Content-Type": "application/json", "token": globals.token});
-
+  int virgule = response.body.indexOf(',');
   if (response.statusCode == 200) {
-    print('5-response' + response.statusCode.toString());
+    globals.codeid = response.body.substring(1, virgule);
     globals.isExist = 'ok';
   }
   return response.body;
 }
 
 Future<String> _addCodeList() async {
-  Map data = {'code_id': 1, 'user_id': globals.user_id, 'status': 1};
+  Map data = {
+    'code_id': globals.codeid.toString(),
+    'user_id': globals.user_id,
+    'status': '0'
+  };
 
   String bodyData = json.encode(data);
-  print('6-addCode dedans');
 
   //  var url = 'http://10.0.2.2:5000/list';
   var url = 'http://172.16.18.27:5000/list';
@@ -69,8 +66,6 @@ Future<String> _addCodeList() async {
     headers: {"Content-Type": "application/json", "token": globals.token},
     body: bodyData,
   );
-
-  print('7-ajout code status' + response.statusCode.toString());
 
   return response.body;
 }
@@ -168,11 +163,18 @@ class _ScanQRState extends State<MyHomePage> {
             FlatButton(
               padding: EdgeInsets.all(15),
               onPressed: () async {
-                //String codeSanner = await BarcodeScanner.scan();
-                await _analyseRequete(
-                    '0ae1a9e5054cb4e016645a97b6f9a3f5;1254'); //barcode scnner
+                String codeSanner = await BarcodeScanner.scan();
+                await _analyseRequete(codeSanner); //barcode scnner
                 setState(() {
-                  qrCodeResult = 'test'; //codeSanner;
+                  if (globals.isExist == 'rien') {
+                    qrCodeResult = 'Vous n\'aver encore rien scanner';
+                  } else if (globals.isExist == 'ok') {
+                    qrCodeResult = 'Promotion ajouté !'; //codeSanner;
+
+                  } else {
+                    qrCodeResult = 'Promotion non conforme !'; //codeSanner;
+
+                  }
                 });
               },
               child: Text(

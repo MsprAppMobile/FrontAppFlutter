@@ -129,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
     };
 
     //var url = 'http://10.0.2.2:5001/users';
-    var url = 'http://172.16.18.27:5001/login';
+    var url = 'http://172.16.18.27:5001/users';
     String body = json.encode(data);
 
     http.Response response = await http.post(
@@ -251,6 +251,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     labelText: 'Password',
                                     icon: Icon(Icons.contact_page),
                                   ),
+                                  obscureText: true,
                                   controller: passwordCtrlr2,
                                 ),
                                 TextFormField(
